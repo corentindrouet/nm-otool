@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 09:41:37 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/03 15:43:08 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/04 14:10:23 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,15 +48,36 @@ void	print_seg_name(void *segment, char *ptr)
 	{
 		printf("    addr %llx\n", sec->addr);
 		printf("    offset %d\n", sec->offset);
-//		printf("    align %d\n", sec->align);
-//		write(1, (ptr + sec->offset), sec->size);
-//		write(1, "\n", 1);
+		printf("    size %llu\n", sec->size);
 		i++;
 		sec = (void*)sec + sizeof(struct section_64);
 	}
 	printf("  flags %d\n", seg->flags);
 	printf("\n");
-//	printf("  %s %llx %d\n", seg->segname, seg->vmaddr, seg->nsects);
+}
+
+void	print_main(void *cmd, char *ptr)
+{
+	struct entry_point_command	*main_cmd;
+
+	(void)ptr;
+	main_cmd = cmd;
+	printf("    cmd %d\n", main_cmd->cmd);
+	printf("    cmdsize %d\n", main_cmd->cmd);
+	printf("    entryoff %llu\n", main_cmd->entryoff);
+	printf("    stacksize %llu\n", main_cmd->stacksize);
+}
+
+void	print_data(void *cmd, char *ptr)
+{
+	struct data_in_code_entry	*data;
+
+	(void)ptr;
+	data = cmd;
+	printf("    offset %d\n", data->offset);
+	printf("    length %d\n", data->length);
+	printf("    kind %d\n", data->kind);
+	write(1, ptr + data->offset, data->length);
 }
 
 void	handle_64_bits_files(char *ptr)
@@ -64,6 +85,7 @@ void	handle_64_bits_files(char *ptr)
 	struct mach_header_64		*header;
 	struct load_command			*cmd;
 	struct symtab_command		*sym;
+	union lc_str				*essai;
 	uint32_t					i;
 
 	header = (struct mach_header_64*)ptr;
@@ -72,6 +94,7 @@ void	handle_64_bits_files(char *ptr)
 	printf("%d\n", header->ncmds);
 	while (i < header->ncmds)
 	{
+		essai = (void*)cmd;
 		if (cmd->cmd == LC_SYMTAB)
 		{
 			sym = (struct symtab_command*)cmd;
@@ -79,8 +102,12 @@ void	handle_64_bits_files(char *ptr)
 		}
 		else if (cmd->cmd == LC_SEGMENT_64)
 			print_seg_name(cmd, ptr);
+		else if (cmd->cmd == LC_MAIN)
+			print_main(cmd, ptr);
+		else if (cmd->cmd == LC_DATA_IN_CODE)
+			print_data(cmd, ptr);
 		else
-			printf("%x\n", cmd->cmd);
+			printf("%d\n", cmd->cmd);
 		cmd = (void*) cmd + cmd->cmdsize;
 		i++;
 	}
