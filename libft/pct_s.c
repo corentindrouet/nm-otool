@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/07 09:54:51 by cdrouet           #+#    #+#             */
-/*   Updated: 2016/02/03 08:37:49 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/05 14:11:17 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,13 @@
 static char		*pct_ss2(const char *restrict f, int nb2, int nb1, char *ptr)
 {
 	char	*str;
+	char	*tmp;
 	int		i;
 
 	if (ptr == NULL)
 		str = ft_strjoin("(nu", "ll)");
 	else
-	{
 		str = ft_strjoin("", ptr);
-	}
 	if (ft_strchr(f, '.') != NULL)
 	{
 		i = 0;
@@ -32,12 +31,13 @@ static char		*pct_ss2(const char *restrict f, int nb2, int nb1, char *ptr)
 		if (nb2 < 0)
 			nb2 *= -1;
 		if (f[i] != '*')
-			str = ft_strsub(str, 0, ft_atoi(&f[i]));
+			tmp = ft_strsub(str, 0, ft_atoi(&f[i]));
 		else
-			str = ft_strsub(str, 0, nb2);
+			tmp = ft_strsub(str, 0, nb2);
+		free(str);
+		str = tmp;
 	}
-	str = aj_decal(&str, f, nb1);
-	return (str);
+	return (aj_decal(&str, f, nb1));
 }
 
 static int		pct_ss(const char *restrict format, va_list ap)
@@ -56,7 +56,9 @@ static int		pct_ss(const char *restrict format, va_list ap)
 	ptr = (char*)va_arg(ap, char*);
 	str = pct_ss2(format, nb2, nb1, ptr);
 	ft_putstr(str);
-	return (ft_strlen(str));
+	nb1 = ft_strlen(str);
+	free(str);
+	return (nb1);
 }
 
 static wchar_t	*wchar_null(void)
@@ -91,7 +93,9 @@ int				pct_ls(const char *restrict format, va_list ap)
 		res = wchar_null();
 	res = precis_wchar_t(res, format, (int)nb2);
 	res = decal_wstr(&res, format, (int)nb1);
-	return (ft_putwstr_t(res));
+	nb1 = ft_putwstr_t(res);
+	free(res);
+	return (nb1);
 }
 
 int				pct_s(const char *restrict format, va_list ap)

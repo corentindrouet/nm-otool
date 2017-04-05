@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/01 09:42:40 by cdrouet           #+#    #+#             */
-/*   Updated: 2016/02/04 13:26:29 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/05 13:09:11 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,9 @@ int			print_nopct(const char *restrict format, char c, va_list ap)
 		ptr[0] = c;
 		ptr = decal_c(&ptr, format, j);
 		ft_putstr(ptr);
-		return (ft_strlen(ptr));
+		i = ft_strlen(ptr);
+		free(ptr);
+		return (i);
 	}
 	else if (c != '\0')
 		ft_putchar(c);
@@ -52,13 +54,16 @@ int			cont_carac(char *s, char c)
 int			pct_pct(const char *restrict format, va_list ap)
 {
 	char	*res;
+	int		i;
 
 	(void)ap;
 	res = ft_strnew(2);
 	res[0] = '%';
 	res = aj_decal(&res, format, 0);
 	ft_putstr(res);
-	return (ft_strlen(res));
+	i = ft_strlen(res);
+	free(res);
+	return (i);
 }
 
 static int	recur_uitoa_b(unsigned int nbr, int base, char *ptr, int index)

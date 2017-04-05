@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/03 13:21:51 by cdrouet           #+#    #+#             */
-/*   Updated: 2016/02/04 13:58:23 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/05 15:23:18 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ char		*width_d(char **ptr, const char *restrict format, int nb1, int nb2)
 {
 	int		i[3];
 	int		wid;
-	char	*res;
+	char	*res[3];
 	char	c;
 	int		nbrneg;
 
@@ -107,14 +107,15 @@ char		*width_d(char **ptr, const char *restrict format, int nb1, int nb2)
 	if ((wid = init_decal_d(format, i, &c, &nbrneg)) == -1
 		|| wid <= (int)ft_strlen(*ptr))
 		return (*ptr);
-	res = ft_strnew(wid - ft_strlen(*ptr) + 1);
+	res[0] = ft_strnew(wid - ft_strlen(*ptr) + 1);
 	i[0] = -1;
 	while (++i[0] < (wid - (int)ft_strlen(*ptr)))
-		res[i[0]] = c;
+		res[0][i[0]] = c;
 	if (c == '0' && ((*ptr)[0] == '+' || (*ptr)[0] == '-'))
-		return (ft_strjoin(ft_strsub(*ptr, 0, 1), ft_strjoin(res, &(*ptr)[1])));
+		return (ft_strjoin_free(ft_strsub(*ptr, 0, 1),
+					ft_strjoin_free(res[0], &(*ptr)[1], 1), 3));
 	else if (c == '0' || (!ft_strchr(format, '-') && !nbrneg))
-		return (ft_strjoin(res, *ptr));
+		return (ft_strjoin_free(res[0], *ptr, 1));
 	else
-		return (ft_strjoin(*ptr, res));
+		return (ft_strjoin_free(*ptr, res[0], 2));
 }

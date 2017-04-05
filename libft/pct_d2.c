@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/04 10:26:05 by cdrouet           #+#    #+#             */
-/*   Updated: 2016/02/04 13:45:59 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/05 15:52:55 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,12 @@ int		pct_jd(va_list ap, const char *restrict f)
 		if (!ft_strchr(f, '.') && (r[0] == '0' || r[0] == ' ') && r[1] != '\0')
 			r[0] = ' ';
 		else
-			r = ft_strjoin(" ", r);
+			r = ft_strjoin_free(" ", r, 2);
 	}
 	ft_putstr(r);
-	return (ft_strlen(r));
+	nb1 = ft_strlen(r);
+	free(r);
+	return (nb1);
 }
 
 int		pct_zd(va_list ap, const char *restrict f)
@@ -56,10 +58,12 @@ int		pct_zd(va_list ap, const char *restrict f)
 		if (!ft_strchr(f, '.') && (r[0] == '0' || r[0] == ' ') && r[1] != '\0')
 			r[0] = ' ';
 		else
-			r = ft_strjoin(" ", r);
+			r = ft_strjoin_free(" ", r, 2);
 	}
 	ft_putstr(r);
-	return (ft_strlen(r));
+	nb1 = ft_strlen(r);
+	free(r);
+	return (nb1);
 }
 
 int		pct_dd(va_list ap, const char *restrict f)
@@ -81,8 +85,10 @@ int		pct_dd(va_list ap, const char *restrict f)
 		if (!ft_strchr(f, '.') && (r[0] == '0' || r[0] == ' ') && r[1] != '\0')
 			r[0] = ' ';
 		else if (!ft_strchr(f, '.'))
-			r = ft_strjoin(" ", r);
+			r = ft_strjoin_free(" ", r, 2);
 	}
 	ft_putstr(r);
-	return (ft_strlen(r));
+	nb1 = ft_strlen(r);
+	free(r);
+	return (nb1);
 }

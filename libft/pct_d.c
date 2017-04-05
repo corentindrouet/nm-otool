@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/16 12:39:15 by cdrouet           #+#    #+#             */
-/*   Updated: 2016/02/04 13:43:56 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/05 15:53:07 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,12 @@ int		pct_hhd(va_list ap, const char *restrict f)
 		if (!ft_strchr(f, '.') && (r[0] == '0' || r[0] == ' ') && r[1] != '\0')
 			r[0] = ' ';
 		else
-			r = ft_strjoin(" ", r);
+			r = ft_strjoin_free(" ", r, 2);
 	}
 	ft_putstr(r);
-	return (ft_strlen(r));
+	nb1 = ft_strlen(r);
+	free(r);
+	return (nb1);
 }
 
 int		pct_hd(va_list ap, const char *restrict f)
@@ -75,10 +77,12 @@ int		pct_hd(va_list ap, const char *restrict f)
 		if (!ft_strchr(f, '.') && (r[0] == '0' || r[0] == ' ') && r[1] != '\0')
 			r[0] = ' ';
 		else
-			r = ft_strjoin(" ", r);
+			r = ft_strjoin_free(" ", r, 2);
 	}
 	ft_putstr(r);
-	return (ft_strlen(r));
+	nb1 = ft_strlen(r);
+	free(r);
+	return (nb1);
 }
 
 int		pct_ld(va_list ap, const char *restrict f)
@@ -100,10 +104,12 @@ int		pct_ld(va_list ap, const char *restrict f)
 		if (!ft_strchr(f, '.') && (r[0] == '0' || r[0] == ' ') && r[1] != '\0')
 			r[0] = ' ';
 		else
-			r = ft_strjoin(" ", r);
+			r = ft_strjoin_free(" ", r, 2);
 	}
 	ft_putstr(r);
-	return (ft_strlen(r));
+	nb1 = ft_strlen(r);
+	free(r);
+	return (nb1);
 }
 
 int		pct_lld(va_list ap, const char *restrict f)
@@ -125,8 +131,10 @@ int		pct_lld(va_list ap, const char *restrict f)
 		if (!ft_strchr(f, '.') && (r[0] == '0' || r[0] == ' ') && r[1] != '\0')
 			r[0] = ' ';
 		else
-			r = ft_strjoin(" ", r);
+			r = ft_strjoin_free(" ", r, 2);
 	}
 	ft_putstr(r);
-	return (ft_strlen(r));
+	nb1 = ft_strlen(r);
+	free(r);
+	return (nb1);
 }

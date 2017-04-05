@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/16 12:36:36 by cdrouet           #+#    #+#             */
-/*   Updated: 2016/02/04 14:22:24 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/05 16:12:12 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,5 +111,8 @@ int		pct_ld(va_list ap, const char *restrict format);
 int		pct_zd(va_list ap, const char *restrict format);
 int		pct_jd(va_list ap, const char *restrict format);
 int		pct_dd(va_list ap, const char *restrict format);
+char	*ft_strjoin_free(char *s1, char *s2, int bin);
+void	replace_ptr(char **ptr1, char **ptr2);
+int		put_len_free(char *ptr);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/07 10:23:01 by cdrouet           #+#    #+#             */
-/*   Updated: 2016/02/04 09:37:05 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/05 15:50:07 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,9 @@ static int	pct_cc(const char *restrict format, va_list ap)
 	str[0] = ptr;
 	if (format[i - 1] != '.')
 		str = decal_c(&str, format, nb1);
-	return (pct_cc2(str, ptr, nb1));
+	i = pct_cc2(str, ptr, nb1);
+	free(str);
+	return (i);
 }
 
 int			pct_lc(const char *restrict format, va_list ap)
@@ -82,10 +84,13 @@ int			pct_lc(const char *restrict format, va_list ap)
 	pr[1] = 0;
 	pr[0] = res;
 	pr = decal_wstr(&pr, format, (int)nb1);
-	if (res == 0 && ft_wstrlen(pr) == 0)
-		return (ft_putwmem(pr, ft_wstrlen(pr) + 1));
-	else if (res == 0)
-		return (ft_putwmem(&pr[1], ft_wstrlen(pr)));
+	nb2 = (ft_wstrlen(pr) == 0) ? 1 : 0;
+	if (res == 0)
+	{
+		nb1 = ft_putwmem(&pr[((nb2) ? 0 : 1)], ft_wstrlen(pr) + nb2);
+		free(pr);
+		return (nb1);
+	}
 	return (ft_putwstr_t(pr));
 }
 

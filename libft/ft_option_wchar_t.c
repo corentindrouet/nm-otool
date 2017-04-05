@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/19 11:47:00 by cdrouet           #+#    #+#             */
-/*   Updated: 2016/02/01 09:17:04 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/05 13:37:21 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,17 @@ int				nbr_bytes_wchar(wchar_t s)
 {
 	unsigned int	wc;
 	char			*str;
+	int				len;
 
 	wc = s;
 	str = ft_uitoa_base(wc, 2);
-	if (ft_strlen(str) <= 7)
+	len = ft_strlen(str);
+	free(str);
+	if (len <= 7)
 		return (1);
-	else if (ft_strlen(str) <= 11)
+	else if (len <= 11)
 		return (2);
-	else if (ft_strlen(str) <= 16)
+	else if (len <= 16)
 		return (3);
 	else
 		return (4);
