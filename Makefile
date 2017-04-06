@@ -6,7 +6,7 @@
 #    By: mdugot <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/12/03 12:08:51 by mdugot            #+#    #+#              #
-#    Updated: 2017/04/06 11:25:02 by cdrouet          ###   ########.fr        #
+#    Updated: 2017/04/06 15:18:16 by cdrouet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,9 @@ SRC_NAME= ft_nm.c \
 		  nm_file.c \
 		  handle_64.c \
 		  sectment_lst.c \
-		  segment_lst.c
+		  segment_lst.c \
+		  symtable_lst.c
+
 SRC_PATH= ./sources/
 INC_PATH= ./includes/
 LIB_NAME= libftprintf.a

@@ -6,33 +6,66 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 09:41:37 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/06 13:56:21 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/06 15:40:48 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
 #include <stdio.h>
 
+char	search_symbol(t_file_structs *file, struct nlist_64 *sym)
+{
+	t_section_list	*tmp;
+
+	if ((sym->n_type & N_TYPE) == N_UNDF)
+		return ('U');
+	if ((sym->n_type & N_TYPE) == N_ABS)
+		return ('A');
+	if ((sym->n_type & N_TYPE) == N_INDR)
+		return ('I');
+	if ((sym->n_type & N_TYPE) == N_SECT)
+	{
+		tmp = file->sections;
+		while (tmp && tmp->index != sym->n_sect)
+			tmp = tmp->next;
+		if (!ft_strcmp(tmp->section.sect_64->sectname, SECT_TEXT))
+			return ('T');
+	}
+	return ('Q');
+}
+
 void	print_output(t_file_structs *file)
 {
 	uint32_t		i;
 	char 			*str_table;
 	struct nlist_64	*sym_table;
+	t_symtable		*sym_lst;
+	t_symtable		*tmp;
 
 	i = 0;
 	str_table = (void*)file->file + file->sym->stroff;
 	sym_table = (void*)file->file + file->sym->symoff;
+	sym_lst = NULL;
 	while (i < file->sym->nsyms)
 	{
-		if ((uint64_t)sym_table[i].n_value)
-			printf("%.16llx ", (uint64_t)sym_table[i].n_value);
-		else
-			printf("                 ");
-		printf("%x %d %s\n", (uint8_t)(sym_table[i].n_type & N_TYPE) ,
-				sym_table[i].n_sect,
-				str_table + sym_table[i].n_un.n_strx);
+		tmp = create_symtable(&sym_table[i],
+					(char*)(str_table + sym_table[i].n_un.n_strx));
+		add_symtable(&sym_lst, tmp);
 		i++;
 	}
+	sort_symtable(sym_lst);
+	tmp = sym_lst;
+	while (tmp)
+	{
+		if (tmp->symtable.symtable_64->n_value)
+			printf("%.16llx ", tmp->symtable.symtable_64->n_value);
+		else
+			printf("                 ");
+		printf("%c %s\n", search_symbol(file, tmp->symtable.symtable_64),
+				tmp->name);
+		tmp = tmp->next;
+	}
+	delete_symtable(sym_lst);
 }
 
 void	add_seg(void *segment, t_file_structs * file)
@@ -69,11 +102,18 @@ void	handle_64_bits_files(t_file_structs *file)
 	{
 		if (cmd->cmd == LC_SYMTAB)
 			file->sym = (void*)cmd;
-		else if (cmd->cmd == LC_SEGMENT_64)
+		cmd = (void*) cmd + cmd->cmdsize;
+		i++;
+	}
+	cmd = (void*)file->file + sizeof(struct mach_header_64);
+	i = 0;
+	while (i < file->headers.header_64->ncmds)
+	{
+		if (cmd->cmd == LC_SEGMENT_64)
 			add_seg(cmd, file);
 		cmd = (void*) cmd + cmd->cmdsize;
 		i++;
 	}
 	print_output(file);
-	print_segments(file->segments);
+//	print_segments(file->segments);
 }

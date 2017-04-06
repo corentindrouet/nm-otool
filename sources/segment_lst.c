@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/06 11:07:21 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/06 13:56:24 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/06 14:08:13 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,11 @@ void			print_segments(t_segment_list *lst)
 		while (i < lst->segment.seg_64->nsects)
 		{
 			printf("  %d sectname %s\n", tmp->index, tmp->section.sect_64->sectname);
+			printf("  type %x\n", (tmp->section.sect_64->flags & SECTION_TYPE));
 			tmp = tmp->next;
 			i++;
 		}
+		printf("\n");
 		lst = lst->next;
 	}
 }
