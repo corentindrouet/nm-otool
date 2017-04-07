@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 08:52:25 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/06 15:20:21 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/07 13:01:22 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,11 +72,13 @@ typedef struct	s_file_structs
 	struct s_section_list	*sections;
 	struct symtab_command	*sym;
 	char					*file;
+	int						swap;
 }				t_file_structs;
 
 int				error_exit(char *msg, char *name, int exit_type);
 void			nm_file(t_file_structs *file);
 void			handle_64_bits_files(t_file_structs *file);
+void			handle_32_bits_files(t_file_structs *file);
 t_segment_list	*create_segment(void *seg);
 void			add_segment(t_segment_list **lst, t_segment_list *elem);
 t_segment_list	*search_segment_by_index(t_segment_list *lst, int index);
@@ -91,5 +93,6 @@ t_symtable		*create_symtable(void *sym, char *name);
 void			add_symtable(t_symtable **lst, t_symtable *elem);
 void			sort_symtable(t_symtable *lst);
 void			delete_symtable(t_symtable *lst);
+uint64_t		swap_byte(uint64_t a, int size, int need_swap);
 
 #endif

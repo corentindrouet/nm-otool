@@ -6,35 +6,38 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 09:41:37 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/06 15:40:48 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/07 13:12:35 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
-#include <stdio.h>
 
-char	search_symbol(t_file_structs *file, struct nlist_64 *sym)
+static char	search_symbol(t_file_structs *file, struct nlist_64 *sym)
 {
 	t_section_list	*tmp;
+	char			c;
 
-	if ((sym->n_type & N_TYPE) == N_UNDF)
-		return ('U');
-	if ((sym->n_type & N_TYPE) == N_ABS)
-		return ('A');
-	if ((sym->n_type & N_TYPE) == N_INDR)
-		return ('I');
-	if ((sym->n_type & N_TYPE) == N_SECT)
+	c = 0;
+	if ((swap_byte(sym->n_type, sizeof(sym->n_type), file->swap) & N_TYPE) == N_UNDF)
+		c = 'U';
+	else if ((swap_byte(sym->n_type, sizeof(sym->n_type), file->swap) & N_TYPE) == N_ABS)
+		c = 'A';
+	else if ((swap_byte(sym->n_type, sizeof(sym->n_type), file->swap) & N_TYPE) == N_INDR)
+		c = 'I';
+	else if ((swap_byte(sym->n_type, sizeof(sym->n_type), file->swap) & N_TYPE) == N_SECT)
 	{
 		tmp = file->sections;
-		while (tmp && tmp->index != sym->n_sect)
+		while (tmp && tmp->index != (int)swap_byte(sym->n_sect, sizeof(sym->n_sect, file->swap), file->swap))
 			tmp = tmp->next;
 		if (!ft_strcmp(tmp->section.sect_64->sectname, SECT_TEXT))
-			return ('T');
+			c = 'T';
 	}
-	return ('Q');
+	if (c != 0 && !(swap_byte(sym->n_type, sizeof(sym->n_type), file->swap) & N_EXT))
+		c += 32;
+	return (c);
 }
 
-void	print_output(t_file_structs *file)
+static void	print_output(t_file_structs *file)
 {
 	uint32_t		i;
 	char 			*str_table;
@@ -43,13 +46,13 @@ void	print_output(t_file_structs *file)
 	t_symtable		*tmp;
 
 	i = 0;
-	str_table = (void*)file->file + file->sym->stroff;
-	sym_table = (void*)file->file + file->sym->symoff;
+	str_table = (void*)file->file + swap_byte(file->sym->stroff, sizeof(file->sym->stroff), file->swap);
+	sym_table = (void*)file->file + swap_byte(file->sym->symoff, sizeof(file->sym->symoff), file->swap);
 	sym_lst = NULL;
-	while (i < file->sym->nsyms)
+	while (i < swap_byte(file->sym->nsyms, sizeof(file->sym->nsyms), file->swap))
 	{
 		tmp = create_symtable(&sym_table[i],
-					(char*)(str_table + sym_table[i].n_un.n_strx));
+					(char*)(str_table + swap_byte(sym_table[i].n_un.n_strx, sizeof(sym_table[i].n_un.n_strx), file->swap)));
 		add_symtable(&sym_lst, tmp);
 		i++;
 	}
@@ -57,18 +60,23 @@ void	print_output(t_file_structs *file)
 	tmp = sym_lst;
 	while (tmp)
 	{
-		if (tmp->symtable.symtable_64->n_value)
-			printf("%.16llx ", tmp->symtable.symtable_64->n_value);
-		else
-			printf("                 ");
-		printf("%c %s\n", search_symbol(file, tmp->symtable.symtable_64),
-				tmp->name);
+		if (search_symbol(file, tmp->symtable.symtable_64))
+		{
+			if (swap_byte(tmp->symtable.symtable_64->n_value, sizeof(tmp->symtable.symtable_64->n_value), file->swap))
+				ft_printf("%.16llx ", swap_byte(tmp->symtable.symtable_64->n_value, sizeof(tmp->symtable.symtable_64->n_value), file->swap));
+			else
+				ft_printf("                 ");
+			ft_printf("%c %s\n", search_symbol(file, tmp->symtable.symtable_64),
+					tmp->name);
+		}
 		tmp = tmp->next;
 	}
 	delete_symtable(sym_lst);
+	delete_section_lst(file->sections);
+	delete_segment_lst(file->segments);
 }
 
-void	add_seg(void *segment, t_file_structs * file)
+static void	add_seg(void *segment, t_file_structs * file)
 {
 	struct section_64			*tmp_sect;
 	t_section_list				*tmp_sect_add;
@@ -98,22 +106,21 @@ void	handle_64_bits_files(t_file_structs *file)
 	file->headers.header_64 = (struct mach_header_64*)file->file;
 	cmd = (void*)file->file + sizeof(struct mach_header_64);
 	i = 0;
-	while (i < file->headers.header_64->ncmds)
+	while (i < swap_byte(file->headers.header_64->ncmds, sizeof(file->headers.header_64->ncmds), file->swap))
 	{
-		if (cmd->cmd == LC_SYMTAB)
+		if (swap_byte(cmd->cmd, sizeof(cmd->cmd), file->swap) == LC_SYMTAB)
 			file->sym = (void*)cmd;
-		cmd = (void*) cmd + cmd->cmdsize;
+		cmd = (void*) cmd + swap_byte(cmd->cmdsize, sizeof(cmd->cmdsize), file->swap);
 		i++;
 	}
 	cmd = (void*)file->file + sizeof(struct mach_header_64);
 	i = 0;
-	while (i < file->headers.header_64->ncmds)
+	while (i < swap_byte(file->headers.header_64->ncmds, sizeof(file->headers.header_64->ncmds), file->swap))
 	{
-		if (cmd->cmd == LC_SEGMENT_64)
+		if (swap_byte(cmd->cmd, sizeof(cmd->cmd), file->swap) == LC_SEGMENT_64)
 			add_seg(cmd, file);
-		cmd = (void*) cmd + cmd->cmdsize;
+		cmd = (void*) cmd + swap_byte(cmd->cmdsize, sizeof(cmd->cmdsize), file->swap);
 		i++;
 	}
 	print_output(file);
-//	print_segments(file->segments);
 }

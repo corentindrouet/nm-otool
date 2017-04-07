@@ -6,7 +6,7 @@
 #    By: mdugot <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/12/03 12:08:51 by mdugot            #+#    #+#              #
-#    Updated: 2017/04/06 15:18:16 by cdrouet          ###   ########.fr        #
+#    Updated: 2017/04/07 12:58:00 by cdrouet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,9 +16,11 @@ CFLAGS= -Wall -Werror -Wextra
 SRC_NAME= ft_nm.c \
 		  nm_file.c \
 		  handle_64.c \
+		  handle_32.c \
 		  sectment_lst.c \
 		  segment_lst.c \
-		  symtable_lst.c
+		  symtable_lst.c \
+		  utils.c
 
 SRC_PATH= ./sources/
 INC_PATH= ./includes/
