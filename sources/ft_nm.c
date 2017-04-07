@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 08:52:06 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/07 13:13:51 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/07 14:31:07 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	init_file_struct(t_file_structs *file)
 	file->sections = NULL;
 	file->sym = NULL;
 	file->file = NULL;
+	file->swap = 0;
 }
 
 int		main(int ac, char **av)
@@ -44,6 +45,7 @@ int		main(int ac, char **av)
 	i = 1;
 	while (i < ac)
 	{
+		init_file_struct(&file);
 		fd = open(av[i], O_RDONLY);
 		if (fd == -1)
 			return (error_exit("Can't open file ", av[i], EXIT_FAILURE));
@@ -51,6 +53,8 @@ int		main(int ac, char **av)
 			return (error_exit("fstat error", NULL, EXIT_FAILURE));
 		if ((file.file = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) == MAP_FAILED)
 			return (error_exit("mmap error", NULL, EXIT_FAILURE));
+		if (ac > 2)
+			ft_printf("\n%s:\n", av[i]);
 		nm_file(&file);
 		if (munmap(file.file, buf.st_size) == -1)
 			return (error_exit("munmap error", NULL, EXIT_FAILURE));

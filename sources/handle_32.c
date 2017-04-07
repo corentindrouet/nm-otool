@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 09:23:10 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/07 13:53:45 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/07 14:24:40 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static void	print_output(t_file_structs *file)
 	{
 		if (search_symbol(file, tmp->symtable.symtable))
 		{
-			if (swap_byte(tmp->symtable.symtable->n_value, sizeof(tmp->symtable.symtable->n_value), file->swap))
+			if (search_symbol(file, tmp->symtable.symtable) != 'U')
 				ft_printf("%.8llx ", swap_byte(tmp->symtable.symtable->n_value, sizeof(tmp->symtable.symtable->n_value), file->swap));
 			else
 				ft_printf("         ");

@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 09:41:37 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/07 13:12:35 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/07 14:25:08 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ static char	search_symbol(t_file_structs *file, struct nlist_64 *sym)
 			tmp = tmp->next;
 		if (!ft_strcmp(tmp->section.sect_64->sectname, SECT_TEXT))
 			c = 'T';
+		if ((swap_byte(tmp->section.sect_64->flags, sizeof(tmp->section.sect_64->flags), file->swap) & SECTION_TYPE) == S_ZEROFILL)
+			c = 'S';
 	}
 	if (c != 0 && !(swap_byte(sym->n_type, sizeof(sym->n_type), file->swap) & N_EXT))
 		c += 32;
@@ -62,7 +64,7 @@ static void	print_output(t_file_structs *file)
 	{
 		if (search_symbol(file, tmp->symtable.symtable_64))
 		{
-			if (swap_byte(tmp->symtable.symtable_64->n_value, sizeof(tmp->symtable.symtable_64->n_value), file->swap))
+			if (search_symbol(file, tmp->symtable.symtable_64) != 'U')
 				ft_printf("%.16llx ", swap_byte(tmp->symtable.symtable_64->n_value, sizeof(tmp->symtable.symtable_64->n_value), file->swap));
 			else
 				ft_printf("                 ");
