@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 09:23:10 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/07 14:24:40 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/12 15:26:57 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,17 @@ static char	search_symbol(t_file_structs *file, struct nlist *sym)
 		c = 'I';
 	else if ((swap_byte(sym->n_type, sizeof(sym->n_type), file->swap) & N_TYPE) == N_SECT)
 	{
+		c = 'S';
 		tmp = file->sections;
 		while (tmp && tmp->index != (int)swap_byte(sym->n_sect, sizeof(sym->n_sect), file->swap))
 			tmp = tmp->next;
 		if (!ft_strcmp(tmp->section.sect->sectname, SECT_TEXT))
 			c = 'T';
-		if ((swap_byte(tmp->section.sect->flags, sizeof(tmp->section.sect->flags), file->swap) & SECTION_TYPE) == S_ZEROFILL)
-			c = 'S';
+//		if ((swap_byte(tmp->section.sect->flags, sizeof(tmp->section.sect->flags), file->swap) & SECTION_TYPE) >= S_ZEROFILL)
+		if (!ft_strcmp(tmp->section.sect_64->sectname, SECT_BSS))
+			c = 'B';
+		if (!ft_strcmp(tmp->section.sect_64->sectname, SECT_DATA))
+			c = 'D';
 	}
 	if (c != 0 && !(swap_byte(sym->n_type, sizeof(sym->n_type), file->swap) & N_EXT))
 		c += 32;
