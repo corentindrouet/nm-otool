@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 08:52:25 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/07 13:01:22 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/12 14:17:11 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <sys/mman.h>
 # include <mach-o/loader.h>
 # include <mach-o/nlist.h>
+# include <mach-o/ranlib.h>
 # include <fcntl.h>
 # include <sys/stat.h>
 
@@ -42,6 +43,17 @@ union			u_symtable
 	struct nlist	*symtable;
 	struct nlist_64	*symtable_64;
 };
+
+typedef struct	s_arch_header
+{
+	char	name[16];
+	char	last_modification[12];
+	char	user_id[6];
+	char	group_id[6];
+	char	mode[8];
+	char	size[10];
+	uint16_t	ending;
+}				t_arch_header;
 
 typedef struct	s_segment_list
 {
@@ -72,7 +84,9 @@ typedef struct	s_file_structs
 	struct s_section_list	*sections;
 	struct symtab_command	*sym;
 	char					*file;
+	struct stat				*file_info;
 	int						swap;
+	char					*file_name;
 }				t_file_structs;
 
 int				error_exit(char *msg, char *name, int exit_type);
@@ -94,5 +108,7 @@ void			add_symtable(t_symtable **lst, t_symtable *elem);
 void			sort_symtable(t_symtable *lst);
 void			delete_symtable(t_symtable *lst);
 uint64_t		swap_byte(uint64_t a, int size, int need_swap);
+void			handle_archives(t_file_structs *file);
+void			init_file_struct(t_file_structs *file, char *filename);
 
 #endif

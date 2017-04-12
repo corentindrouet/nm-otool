@@ -6,7 +6,7 @@
 #    By: mdugot <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/12/03 12:08:51 by mdugot            #+#    #+#              #
-#    Updated: 2017/04/07 12:58:00 by cdrouet          ###   ########.fr        #
+#    Updated: 2017/04/12 13:23:16 by cdrouet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,11 +17,12 @@ SRC_NAME= ft_nm.c \
 		  nm_file.c \
 		  handle_64.c \
 		  handle_32.c \
+		  handle_archives.c \
 		  sectment_lst.c \
 		  segment_lst.c \
 		  symtable_lst.c \
 		  utils.c
-
+INC_NAME= ft_nm.h
 SRC_PATH= ./sources/
 INC_PATH= ./includes/
 LIB_NAME= libftprintf.a
@@ -31,6 +32,7 @@ LIB_INC= ./libft/
 OBJ_NAME= $(SRC_NAME:.c=.o)
 OBJ_PATH= ./obj/
 SRC= $(addprefix $(SRC_PATH), $(SRC_NAME))
+INC= $(addprefix $(INC_PATH), $(INC_NAME))
 OBJ= $(addprefix $(OBJ_PATH), $(OBJ_NAME))
 LIB= $(addprefix $(LIB_PATH), $(LIB_NAME))
 
@@ -51,8 +53,8 @@ $(LIB):
 libft:
 	@make re -C $(LIB_PATH)
 
-$(OBJ_PATH)%.o: $(SRC_PATH)%.c
-	@mkdir $(OBJ_PATH) 2> /dev/null || echo "" > /dev/null
+$(OBJ_PATH)%.o: $(SRC_PATH)%.c $(INC)
+	@mkdir -p $(OBJ_PATH) 2> /dev/null
 	@/bin/echo -n "Compiling $<..."
 	@$(CC) -I$(INC_PATH) -I$(LIB_INC) $(CFLAGS) -o $@ -c $<
 	@echo "Done !"
