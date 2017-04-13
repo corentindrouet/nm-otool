@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/06 11:07:21 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/06 14:08:13 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/13 10:41:22 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,27 +60,4 @@ void			delete_segment_lst(t_segment_list *lst)
 	if (lst->next)
 		delete_segment_lst(lst->next);
 	free(lst);
-}
-
-void			print_segments(t_segment_list *lst)
-{
-	uint32_t	i;
-	t_section_list	*tmp;
-
-	while (lst)
-	{
-		printf("cmd %d index %d\n", lst->segment.seg_64->cmd, lst->index);
-		printf("segname %s\n", lst->segment.seg_64->segname);
-		i = 0;
-		tmp = lst->first_section;
-		while (i < lst->segment.seg_64->nsects)
-		{
-			printf("  %d sectname %s\n", tmp->index, tmp->section.sect_64->sectname);
-			printf("  type %x\n", (tmp->section.sect_64->flags & SECTION_TYPE));
-			tmp = tmp->next;
-			i++;
-		}
-		printf("\n");
-		lst = lst->next;
-	}
 }

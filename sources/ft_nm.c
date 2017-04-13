@@ -6,13 +6,18 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 08:52:06 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/13 10:34:00 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/13 12:55:50 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
 
-int		error_exit(char *msg, char *name, int exit_type)
+int			host_arch(void)
+{
+	return ((sizeof(void*) == 8) ? 64 : 32);
+}
+
+int			error_exit(char *msg, char *name, int exit_type)
 {
 	ft_putstr(msg);
 	if (name)
@@ -22,7 +27,7 @@ int		error_exit(char *msg, char *name, int exit_type)
 	return (exit_type);
 }
 
-void	init_file_struct(t_file_structs *file, char *filename)
+void		init_file_struct(t_file_structs *file, char *filename)
 {
 	file->headers.header = NULL;
 	file->headers.header_64 = NULL;
@@ -35,7 +40,7 @@ void	init_file_struct(t_file_structs *file, char *filename)
 	file->file_name = filename;
 }
 
-int		main(int ac, char **av)
+int			main(int ac, char **av)
 {
 	int				i;
 	int				fd;

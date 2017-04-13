@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 08:52:25 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/13 10:14:16 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/13 13:02:21 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,5 +113,6 @@ uint64_t		swap_byte(uint64_t a, int size, int need_swap);
 void			handle_archives(t_file_structs *file);
 void			init_file_struct(t_file_structs *file, char *filename);
 void			handle_fat_file(t_file_structs *file);
+int				host_arch(void);
 
 #endif

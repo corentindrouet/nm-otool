@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/13 08:36:46 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/13 10:39:09 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/13 13:06:42 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,27 @@ void	handle_fat_file(t_file_structs *file)
 		file->swap = 1;
 	file_arch = (void*)file_head + sizeof(*file_head);
 	i = 0;
-	while (i < swap_byte(file_head->nfat_arch, sizeof(file_head->nfat_arch), file->swap))
+	while (i < SWAP(file_head->nfat_arch, file->swap))
+	{
+		if (host_arch() == 64 &&
+				SWAP(file_arch->cputype, file->swap) & CPU_ARCH_ABI64)
+			break ;
+		file_arch += 1;
+		i++;
+	}
+	if (i < SWAP(file_head->nfat_arch, file->swap))
 	{
 		init_file_struct(&fat, "obj");
-		fat.file = (void*)file->file + swap_byte(file_arch->offset, sizeof(file_arch->offset), file->swap);
-		ft_printf("%d\n", swap_byte(file_arch->cputype, sizeof(file_arch->cputype), file->swap) & CPU_ARCH_MASK);
+		fat.file = (void*)file->file + SWAP(file_arch->offset, file->swap);
+		nm_file(&fat);
+		free(fat.file_info);
+		return ;
+	}
+	i = 0;
+	while (i < SWAP(file_head->nfat_arch, file->swap))
+	{
+		init_file_struct(&fat, "obj");
+		fat.file = (void*)file->file + SWAP(file_arch->offset, file->swap);
 		nm_file(&fat);
 		free(fat.file_info);
 		file_arch += 1;
