@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 09:41:37 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/13 10:37:40 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/13 15:43:37 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,10 @@ static char	search_symbol(t_file_structs *file, struct nlist_64 *sym)
 	char			c;
 
 	c = 0;
-	if ((SWAP(sym->n_type, file->swap) & N_TYPE) == N_UNDF)
+	if ((SWAP(sym->n_type, file->swap) & N_TYPE) == N_UNDF && !sym->n_value)
 		c = 'U';
+	else if ((SWAP(sym->n_type, file->swap) & N_TYPE) == N_UNDF && sym->n_value)
+		c = 'C';
 	else if ((SWAP(sym->n_type, file->swap) & N_TYPE) == N_ABS)
 		c = 'A';
 	else if ((SWAP(sym->n_type, file->swap) & N_TYPE) == N_INDR)
@@ -119,6 +121,8 @@ void		handle_64_bits_files(t_file_structs *file)
 		cmd = (void*)cmd + SWAP(cmd->cmdsize, file->swap);
 		i++;
 	}
+	if (!file->sym)
+		return ;
 	cmd = (void*)file->file + sizeof(struct mach_header_64);
 	i = 0;
 	while (i < SWAP(file->headers.header_64->ncmds, file->swap))

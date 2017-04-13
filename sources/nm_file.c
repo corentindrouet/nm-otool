@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 09:19:24 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/13 10:49:42 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/13 14:31:37 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,4 @@ void	nm_file(t_file_structs *file)
 		handle_fat_file(file);
 	else if (!ft_memcmp(file->file, "!<arch>\n", 8))
 		handle_archives(file);
-	else
-		error_exit("File type unknown", NULL, EXIT_FAILURE);
 }
