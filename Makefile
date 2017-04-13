@@ -6,7 +6,7 @@
 #    By: mdugot <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/12/03 12:08:51 by mdugot            #+#    #+#              #
-#    Updated: 2017/04/12 13:23:16 by cdrouet          ###   ########.fr        #
+#    Updated: 2017/04/13 08:57:07 by cdrouet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ SRC_NAME= ft_nm.c \
 		  handle_64.c \
 		  handle_32.c \
 		  handle_archives.c \
+		  handle_fat.c \
 		  sectment_lst.c \
 		  segment_lst.c \
 		  symtable_lst.c \

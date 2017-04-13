@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 08:52:25 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/12 14:17:11 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/13 10:14:16 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,12 @@
 # include "libft.h"
 # include <sys/mman.h>
 # include <mach-o/loader.h>
+# include <mach-o/fat.h>
 # include <mach-o/nlist.h>
 # include <mach-o/ranlib.h>
 # include <fcntl.h>
 # include <sys/stat.h>
+# define SWAP(x, y) swap_byte(x, sizeof(x), y)
 
 union			u_section
 {
@@ -46,12 +48,12 @@ union			u_symtable
 
 typedef struct	s_arch_header
 {
-	char	name[16];
-	char	last_modification[12];
-	char	user_id[6];
-	char	group_id[6];
-	char	mode[8];
-	char	size[10];
+	char		name[16];
+	char		last_modification[12];
+	char		user_id[6];
+	char		group_id[6];
+	char		mode[8];
+	char		size[10];
 	uint16_t	ending;
 }				t_arch_header;
 
@@ -110,5 +112,6 @@ void			delete_symtable(t_symtable *lst);
 uint64_t		swap_byte(uint64_t a, int size, int need_swap);
 void			handle_archives(t_file_structs *file);
 void			init_file_struct(t_file_structs *file, char *filename);
+void			handle_fat_file(t_file_structs *file);
 
 #endif

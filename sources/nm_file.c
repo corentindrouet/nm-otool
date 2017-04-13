@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 09:19:24 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/12 14:29:02 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/13 09:01:33 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ void	nm_file(t_file_structs *file)
 		handle_32_bits_files(file);
 	else if (magic == MH_MAGIC_64 || magic == MH_CIGAM_64)
 		handle_64_bits_files(file);
+	else if (magic == FAT_MAGIC || magic == FAT_CIGAM)
+		handle_fat_file(file);
 	else if (!ft_memcmp(file->file, "!<arch>\n", 8))
 		handle_archives(file);
 	else

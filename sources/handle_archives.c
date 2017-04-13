@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/12 12:40:30 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/12 14:30:05 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/13 10:38:41 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,19 @@ void	handle_archives(t_file_structs *file)
 	arch_header = (void*)file->file + 8;
 	name_length = ft_atoi(&(arch_header->name[3]));
 	info = (void*)arch_header + sizeof(t_arch_header) + name_length;
-	arch_header = (void*)(info + 1) + *info + 4 + *(uint32_t*)((void*)(info + 1) + *info);
+	arch_header = (void*)(info + 1) + *info +
+		4 + *(uint32_t*)((void*)(info + 1) + *info);
 	i = 0;
 	while (((void*)arch_header - (void*)file->file) < file->file_info->st_size)
 	{
 		init_file_struct(&archived, (char*)arch_header + sizeof(*arch_header));
-		archived.file = (void*)arch_header + sizeof(*arch_header) + ft_atoi(&(arch_header->name[3]));
-		ft_printf("\n%s(%s):\n", file->file_name, archived.file_name, (void*)arch_header - (void*)file->file);
+		archived.file = (void*)arch_header + sizeof(*arch_header) +
+			ft_atoi(&(arch_header->name[3]));
+		ft_printf("\n%s(%s):\n", file->file_name, archived.file_name,
+				(void*)arch_header - (void*)file->file);
 		nm_file(&archived);
-		arch_header = (void*)arch_header + sizeof(*arch_header) + ft_atoi(arch_header->size);
+		free(archived.file_info);
+		arch_header = (void*)arch_header + sizeof(*arch_header) +
+			ft_atoi(arch_header->size);
 	}
 }
