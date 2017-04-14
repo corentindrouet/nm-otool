@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 09:23:10 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/14 14:35:47 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/14 15:13:35 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@ static void	print_output(t_file_structs *file)
 			break ;
 		tmp = tmp->next;
 	}
-	if (!tmp)
-		return ;
 	ptr = (void*)file->file + tmp->section.sect->offset;
 	addr = tmp->section.sect->addr;
 	ft_printf("%s:\nContents of (__TEXT,__text) section", file->file_name);
@@ -83,8 +81,6 @@ void		handle_32_bits_files(t_file_structs *file)
 		cmd = (void*)cmd + cmd->cmdsize;
 		i++;
 	}
-	if (!file->sym)
-		return ;
 	cmd = (void*)file->file + sizeof(struct mach_header);
 	i = 0;
 	while (i < SWAP(file->headers.header->ncmds, file->swap))

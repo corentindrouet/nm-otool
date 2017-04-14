@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/12 12:40:30 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/14 12:31:19 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/14 15:01:26 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,7 @@ void	handle_archives(t_file_structs *file)
 		init_file_struct(&archived, (char*)arch_header + sizeof(*arch_header));
 		archived.file = (void*)arch_header + sizeof(*arch_header) +
 			ft_atoi(&(arch_header->name[3]));
-		ft_printf("\n%s(%s):\n", file->file_name, archived.file_name,
-				(void*)arch_header - (void*)file->file);
+		ft_printf("\n%s(%s):\n", file->file_name, archived.file_name);
 		nm_file(&archived);
 		free(archived.file_info);
 		arch_header = (void*)arch_header + sizeof(*arch_header) +

@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/12 12:40:30 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/14 14:09:02 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/14 15:02:21 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	handle_archives(t_file_structs *file)
 	int				name_length;
 	t_file_structs	archived;
 	int				i;
+	char			*name;
 
 	arch_header = (void*)file->file + 8;
 	name_length = ft_atoi(&(arch_header->name[3]));
@@ -26,15 +27,22 @@ void	handle_archives(t_file_structs *file)
 	arch_header = (void*)(info + 1) + *info +
 		4 + *(uint32_t*)((void*)(info + 1) + *info);
 	i = 0;
+	ft_printf("Archive : %s\n", file->file_name);
 	while (((void*)arch_header - (void*)file->file) < file->file_info->st_size)
 	{
 		init_file_struct(&archived, (char*)arch_header + sizeof(*arch_header));
 		archived.file = (void*)arch_header + sizeof(*arch_header) +
 			ft_atoi(&(arch_header->name[3]));
-		ft_printf("\n%s(%s):\n", file->file_name, archived.file_name,
-				(void*)arch_header - (void*)file->file);
+		name = malloc(ft_strlen(file->file_name) + ft_strlen(archived.file_name) + 3);
+		name[0] = '\0';
+		ft_strcat(name, file->file_name);
+		ft_strcat(name, "(");
+		ft_strcat(name, archived.file_name);
+		ft_strcat(name, ")");
+		archived.file_name = name;
 		nm_file(&archived);
 		free(archived.file_info);
+		free(archived.file_name);
 		arch_header = (void*)arch_header + sizeof(*arch_header) +
 			ft_atoi(arch_header->size);
 	}
