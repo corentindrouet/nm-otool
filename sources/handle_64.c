@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 09:41:37 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/13 15:43:37 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/14 12:38:09 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static void	print_output(t_file_structs *file)
 	tmp = sym_lst;
 	while (tmp)
 	{
-		if (search_symbol(file, tmp->symtable.symtable_64))
+		if (search_symbol(file, tmp->symtable.symtable_64) && !(tmp->symtable.symtable_64->n_type & N_STAB))
 		{
 			if (search_symbol(file, tmp->symtable.symtable_64) != 'U')
 				ft_printf("%.16llx ",
@@ -110,6 +110,7 @@ void		handle_64_bits_files(t_file_structs *file)
 {
 	struct load_command			*cmd;
 	uint32_t					i;
+	void						*ptr;
 
 	file->headers.header_64 = (struct mach_header_64*)file->file;
 	cmd = (void*)file->file + sizeof(struct mach_header_64);
@@ -118,6 +119,8 @@ void		handle_64_bits_files(t_file_structs *file)
 	{
 		if (SWAP(cmd->cmd, file->swap) == LC_SYMTAB)
 			file->sym = (void*)cmd;
+		if (SWAP(cmd->cmd, file->swap) == LC_DYSYMTAB)
+			ptr = cmd;
 		cmd = (void*)cmd + SWAP(cmd->cmdsize, file->swap);
 		i++;
 	}
