@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/13 08:36:46 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/13 13:06:42 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/14 08:49:02 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,9 @@ void	handle_fat_file(t_file_structs *file)
 	}
 	if (i < SWAP(file_head->nfat_arch, file->swap))
 	{
-		init_file_struct(&fat, "obj");
+		init_file_struct(&fat, file->file_name);
 		fat.file = (void*)file->file + SWAP(file_arch->offset, file->swap);
+		fat.file_info->st_size = SWAP(file_arch->size,file->swap);
 		nm_file(&fat);
 		free(fat.file_info);
 		return ;
@@ -43,8 +44,9 @@ void	handle_fat_file(t_file_structs *file)
 	i = 0;
 	while (i < SWAP(file_head->nfat_arch, file->swap))
 	{
-		init_file_struct(&fat, "obj");
+		init_file_struct(&fat, file->file_name);
 		fat.file = (void*)file->file + SWAP(file_arch->offset, file->swap);
+		fat.file_info->st_size = SWAP(file_arch->size, file->swap);
 		nm_file(&fat);
 		free(fat.file_info);
 		file_arch += 1;
