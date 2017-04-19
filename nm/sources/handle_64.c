@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 09:41:37 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/14 12:38:09 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/19 13:05:11 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,8 @@ static void	print_output(t_file_structs *file)
 	{
 		if (search_symbol(file, tmp->symtable.symtable_64) && !(tmp->symtable.symtable_64->n_type & N_STAB))
 		{
-			if (search_symbol(file, tmp->symtable.symtable_64) != 'U')
+			if (search_symbol(file, tmp->symtable.symtable_64) != 'U' &&
+					search_symbol(file, tmp->symtable.symtable_64) != 'u')
 				ft_printf("%.16llx ",
 						SWAP(tmp->symtable.symtable_64->n_value, file->swap));
 			else
@@ -95,7 +96,7 @@ static void	add_seg(void *segment, t_file_structs *file)
 	add_segment(&(file->segments), elem);
 	i = 0;
 	tmp_sect = (void*)elem->segment.seg_64 + sizeof(struct segment_command_64);
-	while (i < elem->segment.seg_64->nsects)
+	while (i < SWAP(elem->segment.seg_64->nsects, file->swap))
 	{
 		tmp_sect_add = create_section(tmp_sect);
 		if (i == 0)

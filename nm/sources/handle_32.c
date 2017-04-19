@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 09:23:10 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/13 15:20:38 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/19 15:41:13 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,13 +69,14 @@ static void	print_output(t_file_structs *file)
 	{
 		if (search_symbol(file, tmp->symtable.symtable))
 		{
-			if (search_symbol(file, tmp->symtable.symtable) != 'U')
+			if (search_symbol(file, tmp->symtable.symtable) != 'U' &&
+					search_symbol(file, tmp->symtable.symtable) != 'u')
 				ft_printf("%.8llx ",
 						SWAP(tmp->symtable.symtable->n_value, file->swap));
 			else
 				ft_printf("         ");
-			ft_printf("%c %s\n", search_symbol(file, tmp->symtable.symtable),
-					tmp->name);
+			ft_printf("%c %s %hhx\n", search_symbol(file, tmp->symtable.symtable),
+					tmp->name, SWAP(tmp->symtable.symtable->n_value, file->swap));
 		}
 		tmp = tmp->next;
 	}
@@ -95,7 +96,7 @@ static void	add_seg(void *segment, t_file_structs *file)
 	add_segment(&(file->segments), elem);
 	i = 0;
 	tmp_sect = (void*)elem->segment.seg + sizeof(struct segment_command);
-	while (i < elem->segment.seg->nsects)
+	while (i < SWAP(elem->segment.seg->nsects, file->swap))
 	{
 		tmp_sect_add = create_section(tmp_sect);
 		if (i == 0)
@@ -114,11 +115,12 @@ void		handle_32_bits_files(t_file_structs *file)
 	file->headers.header = (struct mach_header*)file->file;
 	cmd = (void*)file->file + sizeof(struct mach_header);
 	i = 0;
+	ft_printf("%d\n", file->swap);
 	while (i < SWAP(file->headers.header->ncmds, file->swap))
 	{
 		if (SWAP(cmd->cmd, file->swap) == LC_SYMTAB)
 			file->sym = (void*)cmd;
-		cmd = (void*)cmd + cmd->cmdsize;
+		cmd = (void*)cmd + SWAP(cmd->cmdsize, file->swap);
 		i++;
 	}
 	if (!file->sym)

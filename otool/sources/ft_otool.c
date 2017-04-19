@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/14 13:55:35 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/14 14:08:10 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/19 10:52:26 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ int			host_arch(void)
 
 int			error_exit(char *msg, char *name, int exit_type)
 {
-	ft_putstr(msg);
+	ft_putstr_fd(msg, 2);
 	if (name)
-		ft_putendl(name);
+		ft_putendl_fd(name, 2);
 	else
-		ft_putendl("");
+		ft_putendl_fd("", 2);
 	return (exit_type);
 }
 
@@ -47,7 +47,7 @@ int			exec_for_file(char *name, t_file_structs *file)
 	init_file_struct(file, name);
 	fd = open(name, O_RDONLY);
 	if (fd == -1)
-		return (EXIT_FAILURE);
+		return error_exit("Permission denied.", name, EXIT_FAILURE);
 	if (fstat(fd, file->file_info) < 0)
 		return (EXIT_FAILURE);
 	if ((file->file = mmap(0, file->file_info->st_size,
