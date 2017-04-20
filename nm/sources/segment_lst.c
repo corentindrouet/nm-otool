@@ -6,12 +6,11 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/06 11:07:21 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/13 10:41:22 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/20 14:14:31 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
-#include <stdio.h>
 
 t_segment_list	*create_segment(void *seg)
 {

@@ -6,27 +6,18 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 09:41:37 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/20 10:33:27 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/20 13:36:38 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_otool.h"
 
-static void	print_output(t_file_structs *file)
+static void	print_content(t_section_list *tmp, t_file_structs *file)
 {
-	t_section_list	*tmp;
 	char			*ptr;
 	uint64_t		i;
 	uint64_t		addr;
 
-	tmp = file->sections;
-	while (tmp)
-	{
-		if (!ft_strcmp(tmp->section.sect_64->segname, SEG_TEXT) &&
-				!ft_strcmp(tmp->section.sect_64->sectname, SECT_TEXT))
-			break ;
-		tmp = tmp->next;
-	}
 	ptr = (void*)file->file + tmp->section.sect_64->offset;
 	addr = tmp->section.sect_64->addr;
 	ft_printf("%s:\nContents of (__TEXT,__text) section", file->file_name);
@@ -44,6 +35,21 @@ static void	print_output(t_file_structs *file)
 		addr++;
 	}
 	ft_printf("\n");
+}
+
+static void	print_output(t_file_structs *file)
+{
+	t_section_list	*tmp;
+
+	tmp = file->sections;
+	while (tmp)
+	{
+		if (!ft_strcmp(tmp->section.sect_64->segname, SEG_TEXT) &&
+				!ft_strcmp(tmp->section.sect_64->sectname, SECT_TEXT))
+			break ;
+		tmp = tmp->next;
+	}
+	print_content(tmp, file);
 	delete_section_lst(file->sections);
 	delete_segment_lst(file->segments);
 }
@@ -74,7 +80,6 @@ void		handle_64_bits_files(t_file_structs *file)
 {
 	struct load_command			*cmd;
 	uint32_t					i;
-	void						*ptr;
 
 	file->headers.header_64 = (struct mach_header_64*)file->file;
 	cmd = (void*)file->file + sizeof(struct mach_header_64);
@@ -83,8 +88,6 @@ void		handle_64_bits_files(t_file_structs *file)
 	{
 		if (SWAP(cmd->cmd, file->swap) == LC_SYMTAB)
 			file->sym = (void*)cmd;
-		if (SWAP(cmd->cmd, file->swap) == LC_DYSYMTAB)
-			ptr = cmd;
 		cmd = (void*)cmd + SWAP(cmd->cmdsize, file->swap);
 		i++;
 	}

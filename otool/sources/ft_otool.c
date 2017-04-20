@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/14 13:55:35 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/20 09:42:35 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/20 14:29:01 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int			exec_for_file(char *name, t_file_structs *file)
 	init_file_struct(file, name);
 	fd = open(name, O_RDONLY);
 	if (fd == -1)
-		return error_exit("Permission denied.", name, EXIT_FAILURE);
+		return (error_exit("Permission denied.", name, EXIT_FAILURE));
 	if (fstat(fd, file->file_info) < 0)
 		return (EXIT_FAILURE);
 	if ((file->file = mmap(0, file->file_info->st_size,
@@ -67,7 +67,7 @@ int			main(int ac, char **av)
 	t_file_structs	file;
 
 	if (ac <= 1)
-		return (exec_for_file("./a.out", &file));
+		return (error_exit("Need at least 1 argument", NULL, EXIT_FAILURE));
 	i = 1;
 	while (i < ac)
 	{

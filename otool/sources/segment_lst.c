@@ -6,12 +6,11 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/06 11:07:21 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/14 14:09:13 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/20 14:15:07 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_otool.h"
-#include <stdio.h>
 
 t_segment_list	*create_segment(void *seg)
 {

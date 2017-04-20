@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 09:23:10 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/20 11:42:48 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/20 12:52:03 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,33 +15,50 @@
 static char	search_symbol(t_file_structs *file, struct nlist *sym)
 {
 	t_section_list	*tmp;
-	char			c;
 
-	c = 0;
 	if ((SWAP(sym->n_type, file->swap) & N_TYPE) == N_UNDF && !sym->n_value)
-		c = 'U';
+		return ((!(SWAP(sym->n_type, file->swap) & N_EXT)) ? 'u' : 'U');
 	else if ((SWAP(sym->n_type, file->swap) & N_TYPE) == N_UNDF && sym->n_value)
-		c = 'C';
+		return ((!(SWAP(sym->n_type, file->swap) & N_EXT)) ? 'c' : 'C');
 	else if ((SWAP(sym->n_type, file->swap) & N_TYPE) == N_ABS)
-		c = 'A';
+		return ((!(SWAP(sym->n_type, file->swap) & N_EXT)) ? 'a' : 'A');
 	else if ((SWAP(sym->n_type, file->swap) & N_TYPE) == N_INDR)
-		c = 'I';
+		return ((!(SWAP(sym->n_type, file->swap) & N_EXT)) ? 'i' : 'I');
 	else if ((SWAP(sym->n_type, file->swap) & N_TYPE) == N_SECT)
 	{
-		c = 'S';
 		tmp = file->sections;
 		while (tmp && tmp->index != (int)SWAP(sym->n_sect, file->swap))
 			tmp = tmp->next;
 		if (!ft_strcmp(tmp->section.sect->sectname, SECT_TEXT))
-			c = 'T';
+			return ((!(SWAP(sym->n_type, file->swap) & N_EXT)) ? 't' : 'T');
 		if (!ft_strcmp(tmp->section.sect->sectname, SECT_BSS))
-			c = 'B';
+			return ((!(SWAP(sym->n_type, file->swap) & N_EXT)) ? 'b' : 'B');
 		if (!ft_strcmp(tmp->section.sect->sectname, SECT_DATA))
-			c = 'D';
+			return ((!(SWAP(sym->n_type, file->swap) & N_EXT)) ? 'd' : 'D');
+		return ((!(SWAP(sym->n_type, file->swap) & N_EXT)) ? 's' : 'S');
 	}
-	if (c != 0 && !(SWAP(sym->n_type, file->swap) & N_EXT))
-		c += 32;
-	return (c);
+	return (0);
+}
+
+static void	print_sym_lst(t_file_structs *file, t_symtable *sym_lst)
+{
+	while (sym_lst)
+	{
+		if (search_symbol(file, sym_lst->symtable.symtable)
+				&& !(sym_lst->symtable.symtable->n_type & N_STAB))
+		{
+			if (search_symbol(file, sym_lst->symtable.symtable) != 'U' &&
+					search_symbol(file, sym_lst->symtable.symtable) != 'u')
+				ft_printf("%.8llx ",
+						SWAP(sym_lst->symtable.symtable->n_value, file->swap));
+			else
+				ft_printf("         ");
+			ft_printf("%c %s\n",
+					search_symbol(file, sym_lst->symtable.symtable),
+					sym_lst->name);
+		}
+		sym_lst = sym_lst->next;
+	}
 }
 
 static void	print_output(t_file_structs *file)
@@ -64,22 +81,7 @@ static void	print_output(t_file_structs *file)
 		i++;
 	}
 	sort_symtable(sym_lst);
-	tmp = sym_lst;
-	while (tmp)
-	{
-		if (search_symbol(file, tmp->symtable.symtable) && !(tmp->symtable.symtable->n_type & N_STAB))
-		{
-			if (search_symbol(file, tmp->symtable.symtable) != 'U' &&
-					search_symbol(file, tmp->symtable.symtable) != 'u')
-				ft_printf("%.8llx ",
-						SWAP(tmp->symtable.symtable->n_value, file->swap));
-			else
-				ft_printf("         ");
-			ft_printf("%c %s\n", search_symbol(file, tmp->symtable.symtable),
-					tmp->name);
-		}
-		tmp = tmp->next;
-	}
+	print_sym_lst(file, sym_lst);
 	delete_symtable(sym_lst);
 	delete_section_lst(file->sections);
 	delete_segment_lst(file->segments);

@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 08:52:06 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/19 10:52:46 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/20 14:26:41 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,11 @@ int			exec_for_file(char *name, t_file_structs *file)
 	init_file_struct(file, name);
 	fd = open(name, O_RDONLY);
 	if (fd == -1)
-		return error_exit("Permission denied.", name, EXIT_FAILURE);
+		return (error_exit("Permission denied. ", name, EXIT_FAILURE));
 	else if (fd == -1)
 		return (EXIT_FAILURE);
 	if (fstat(fd, file->file_info) < 0)
-		return error_exit("Permission denied", name, EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	if ((file->file = mmap(0, file->file_info->st_size,
 					PROT_READ, MAP_PRIVATE, fd, 0)) == MAP_FAILED)
 		return (EXIT_FAILURE);

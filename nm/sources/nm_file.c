@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 09:19:24 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/20 10:08:02 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/20 14:23:32 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int		need_swap(unsigned int magic)
 {
-	return (magic == MH_CIGAM || magic == MH_CIGAM_64);
+	return (magic == MH_CIGAM || magic == MH_CIGAM_64 || magic == FAT_CIGAM);
 }
 
 void	nm_file(t_file_structs *file)
@@ -31,4 +31,6 @@ void	nm_file(t_file_structs *file)
 		handle_fat_file(file);
 	else if (!ft_memcmp(file->file, "!<arch>\n", 8))
 		handle_archives(file);
+	else
+		ft_putendl_fd("Not a valid object file !\n", 2);
 }

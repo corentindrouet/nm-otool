@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 09:19:24 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/14 14:09:08 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/20 13:52:56 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int		need_swap(unsigned int magic)
 {
-	return (magic == MH_CIGAM || magic == MH_CIGAM_64);
+	return (magic == MH_CIGAM || magic == MH_CIGAM_64 || magic == FAT_CIGAM);
 }
 
 void	nm_file(t_file_structs *file)

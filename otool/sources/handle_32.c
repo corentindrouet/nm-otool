@@ -6,27 +6,18 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 09:23:10 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/20 10:33:01 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/20 13:33:02 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_otool.h"
 
-static void	print_output(t_file_structs *file)
+static void	print_content(t_section_list *tmp, t_file_structs *file)
 {
-	t_section_list	*tmp;
 	char			*ptr;
-	uint32_t		i;
 	uint32_t		addr;
+	uint32_t		i;
 
-	tmp = file->sections;
-	while (tmp)
-	{
-		if (!ft_strcmp(tmp->section.sect->segname, SEG_TEXT) &&
-				!ft_strcmp(tmp->section.sect->sectname, SECT_TEXT))
-			break ;
-		tmp = tmp->next;
-	}
 	ptr = (void*)file->file + SWAP(tmp->section.sect->offset, file->swap);
 	addr = SWAP(tmp->section.sect->addr, file->swap);
 	ft_printf("%s:\nContents of (__TEXT,__text) section", file->file_name);
@@ -44,6 +35,21 @@ static void	print_output(t_file_structs *file)
 		addr++;
 	}
 	ft_printf("\n");
+}
+
+static void	print_output(t_file_structs *file)
+{
+	t_section_list	*tmp;
+
+	tmp = file->sections;
+	while (tmp)
+	{
+		if (!ft_strcmp(tmp->section.sect->segname, SEG_TEXT) &&
+				!ft_strcmp(tmp->section.sect->sectname, SECT_TEXT))
+			break ;
+		tmp = tmp->next;
+	}
+	print_content(tmp, file);
 	delete_section_lst(file->sections);
 	delete_segment_lst(file->segments);
 }
