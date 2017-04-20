@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 09:23:10 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/19 15:41:13 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/20 11:42:48 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static void	print_output(t_file_structs *file)
 	tmp = sym_lst;
 	while (tmp)
 	{
-		if (search_symbol(file, tmp->symtable.symtable))
+		if (search_symbol(file, tmp->symtable.symtable) && !(tmp->symtable.symtable->n_type & N_STAB))
 		{
 			if (search_symbol(file, tmp->symtable.symtable) != 'U' &&
 					search_symbol(file, tmp->symtable.symtable) != 'u')
@@ -75,8 +75,8 @@ static void	print_output(t_file_structs *file)
 						SWAP(tmp->symtable.symtable->n_value, file->swap));
 			else
 				ft_printf("         ");
-			ft_printf("%c %s %hhx\n", search_symbol(file, tmp->symtable.symtable),
-					tmp->name, SWAP(tmp->symtable.symtable->n_value, file->swap));
+			ft_printf("%c %s\n", search_symbol(file, tmp->symtable.symtable),
+					tmp->name);
 		}
 		tmp = tmp->next;
 	}
@@ -115,7 +115,6 @@ void		handle_32_bits_files(t_file_structs *file)
 	file->headers.header = (struct mach_header*)file->file;
 	cmd = (void*)file->file + sizeof(struct mach_header);
 	i = 0;
-	ft_printf("%d\n", file->swap);
 	while (i < SWAP(file->headers.header->ncmds, file->swap))
 	{
 		if (SWAP(cmd->cmd, file->swap) == LC_SYMTAB)

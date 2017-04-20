@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 09:23:10 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/14 15:13:35 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/20 10:33:01 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,19 @@ static void	print_output(t_file_structs *file)
 			break ;
 		tmp = tmp->next;
 	}
-	ptr = (void*)file->file + tmp->section.sect->offset;
-	addr = tmp->section.sect->addr;
+	ptr = (void*)file->file + SWAP(tmp->section.sect->offset, file->swap);
+	addr = SWAP(tmp->section.sect->addr, file->swap);
 	ft_printf("%s:\nContents of (__TEXT,__text) section", file->file_name);
 	i = 0;
-	while (i < tmp->section.sect->size)
+	while (i < SWAP(tmp->section.sect->size, file->swap))
 	{
 		if ((i % 16) == 0)
 			ft_printf("\n%.8llx\t", addr);
-		ft_printf("%.2hhx ", (char)ptr[i]);
+		ft_printf("%.2hhx", (char)ptr[i]);
+		if (file->swap && ((i + 1) % 4) == 0)
+			ft_printf(" ");
+		else if (!file->swap)
+			ft_printf(" ");
 		i++;
 		addr++;
 	}
@@ -55,7 +59,7 @@ static void	add_seg(void *segment, t_file_structs *file)
 	add_segment(&(file->segments), elem);
 	i = 0;
 	tmp_sect = (void*)elem->segment.seg + sizeof(struct segment_command);
-	while (i < elem->segment.seg->nsects)
+	while (i < SWAP(elem->segment.seg->nsects, file->swap))
 	{
 		tmp_sect_add = create_section(tmp_sect);
 		if (i == 0)
@@ -78,7 +82,7 @@ void		handle_32_bits_files(t_file_structs *file)
 	{
 		if (SWAP(cmd->cmd, file->swap) == LC_SYMTAB)
 			file->sym = (void*)cmd;
-		cmd = (void*)cmd + cmd->cmdsize;
+		cmd = (void*)cmd + SWAP(cmd->cmdsize, file->swap);
 		i++;
 	}
 	cmd = (void*)file->file + sizeof(struct mach_header);

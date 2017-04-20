@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/14 13:55:35 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/19 10:52:26 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/20 09:42:35 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,9 @@ int			exec_for_file(char *name, t_file_structs *file)
 					PROT_READ, MAP_PRIVATE, fd, 0)) == MAP_FAILED)
 		return (EXIT_FAILURE);
 	nm_file(file);
-	free(file->file_info);
 	if (munmap(file->file, file->file_info->st_size) == -1)
 		return (EXIT_FAILURE);
+	free(file->file_info);
 	close(fd);
 	return (EXIT_SUCCESS);
 }

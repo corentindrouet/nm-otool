@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 11:38:02 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/07 11:46:55 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/20 10:06:46 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,23 @@
 
 uint64_t	swap_byte(uint64_t a, int size, int need_swap)
 {
-	uint64_t	ret;
+	char	*ok;
+	char	tmp;
+	int		i;
+
+	if (!need_swap)
+		return (a);
+	i = 0;
+	ok = (char*)&a;
+	while (i < (size / 2))
+	{
+		tmp = ok[i];
+		ok[i] = ok[size - 1 - i];
+		ok[size - 1 - i] = tmp;
+		i++;
+	}
+	return (a);
+/*	uint64_t	ret;
 	int			i;
 	int			dec;
 
@@ -36,5 +52,5 @@ uint64_t	swap_byte(uint64_t a, int size, int need_swap)
 		i += 2;
 		dec++;
 	}
-	return (ret);
+	return (ret);*/
 }

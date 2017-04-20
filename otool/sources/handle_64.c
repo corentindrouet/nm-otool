@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 09:41:37 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/14 15:13:26 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/20 10:33:27 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,11 @@ static void	print_output(t_file_structs *file)
 	{
 		if ((i % 16) == 0)
 			ft_printf("\n%.16llx\t", addr);
-		ft_printf("%.2hhx ", (char)ptr[i]);
+		ft_printf("%.2hhx", (char)ptr[i]);
+		if (file->swap && ((i + 1) % 8) == 0)
+			ft_printf(" ");
+		else if (!file->swap)
+			ft_printf(" ");
 		i++;
 		addr++;
 	}

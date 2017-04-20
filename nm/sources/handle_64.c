@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 09:41:37 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/19 13:05:11 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/20 10:14:33 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,6 @@ void		handle_64_bits_files(t_file_structs *file)
 {
 	struct load_command			*cmd;
 	uint32_t					i;
-	void						*ptr;
 
 	file->headers.header_64 = (struct mach_header_64*)file->file;
 	cmd = (void*)file->file + sizeof(struct mach_header_64);
@@ -120,8 +119,6 @@ void		handle_64_bits_files(t_file_structs *file)
 	{
 		if (SWAP(cmd->cmd, file->swap) == LC_SYMTAB)
 			file->sym = (void*)cmd;
-		if (SWAP(cmd->cmd, file->swap) == LC_DYSYMTAB)
-			ptr = cmd;
 		cmd = (void*)cmd + SWAP(cmd->cmdsize, file->swap);
 		i++;
 	}

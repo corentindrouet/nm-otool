@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/13 08:36:46 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/19 14:03:23 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/20 11:09:02 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,10 @@ void	handle_fat_file(t_file_structs *file)
 	i = 0;
 	while (i < SWAP(file_head->nfat_arch, file->swap))
 	{
-		ft_printf("\n%s (for architecture %s):\n", file->file_name, arch_str(SWAP(file_arch->cputype, file->swap)));
+		if (SWAP(file_head->nfat_arch, file->swap) == 1)
+			ft_printf("%s:\n", file->file_name);
+		else
+			ft_printf("\n%s (for architecture %s):\n", file->file_name, arch_str(SWAP(file_arch->cputype, file->swap)));
 		init_file_struct(&fat, file->file_name);
 		fat.file = (void*)file->file + SWAP(file_arch->offset, file->swap);
 		fat.file_info->st_size = SWAP(file_arch->size, file->swap);
