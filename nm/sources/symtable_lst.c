@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/06 14:48:44 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/20 08:56:38 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/21 09:38:08 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,17 @@ void			add_symtable(t_symtable **lst, t_symtable *elem)
 		*lst = elem;
 		return ;
 	}
+	if (ft_strcmp(elem->name, (*lst)->name) < 0)
+	{
+		elem->next = (*lst);
+		*lst = elem;
+		return ;
+	}
 	tmp = *lst;
-	while (tmp->next)
+	while (tmp->next && ft_strcmp(tmp->next->name, elem->name) < 0)
 		tmp = tmp->next;
+	if (tmp->next)
+		elem->next = tmp->next;
 	tmp->next = elem;
 }
 
@@ -44,38 +52,11 @@ int				is_sorted(t_symtable *lst)
 		return (1);
 	while (lst->next)
 	{
-		if (strcmp(lst->name, lst->next->name) > 0)
+		if (ft_strcmp(lst->name, lst->next->name) > 0)
 			return (0);
 		lst = lst->next;
 	}
 	return (1);
-}
-
-void			sort_symtable(t_symtable *lst)
-{
-	char		*tmp_name;
-	void		*tmp_sym;
-	t_symtable	*tmp;
-
-	if (!lst)
-		return ;
-	while (!is_sorted(lst))
-	{
-		tmp = lst;
-		while (tmp->next)
-		{
-			if (strcmp(tmp->name, tmp->next->name) > 0)
-			{
-				tmp_name = tmp->next->name;
-				tmp->next->name = tmp->name;
-				tmp->name = tmp_name;
-				tmp_sym = tmp->next->symtable.symtable_64;
-				tmp->next->symtable.symtable_64 = tmp->symtable.symtable_64;
-				tmp->symtable.symtable_64 = tmp_sym;
-			}
-			tmp = tmp->next;
-		}
-	}
 }
 
 void			delete_symtable(t_symtable *lst)

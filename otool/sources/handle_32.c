@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 09:23:10 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/20 13:33:02 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/21 08:45:35 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,15 +82,6 @@ void		handle_32_bits_files(t_file_structs *file)
 	uint32_t					i;
 
 	file->headers.header = (struct mach_header*)file->file;
-	cmd = (void*)file->file + sizeof(struct mach_header);
-	i = 0;
-	while (i < SWAP(file->headers.header->ncmds, file->swap))
-	{
-		if (SWAP(cmd->cmd, file->swap) == LC_SYMTAB)
-			file->sym = (void*)cmd;
-		cmd = (void*)cmd + SWAP(cmd->cmdsize, file->swap);
-		i++;
-	}
 	cmd = (void*)file->file + sizeof(struct mach_header);
 	i = 0;
 	while (i < SWAP(file->headers.header->ncmds, file->swap))

@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 09:23:10 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/20 12:52:03 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/21 09:37:30 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ static void	print_output(t_file_structs *file)
 		add_symtable(&sym_lst, tmp);
 		i++;
 	}
-	sort_symtable(sym_lst);
 	print_sym_lst(file, sym_lst);
 	delete_symtable(sym_lst);
 	delete_section_lst(file->sections);
@@ -121,19 +120,12 @@ void		handle_32_bits_files(t_file_structs *file)
 	{
 		if (SWAP(cmd->cmd, file->swap) == LC_SYMTAB)
 			file->sym = (void*)cmd;
+		else if (SWAP(cmd->cmd, file->swap) == LC_SEGMENT)
+			add_seg(cmd, file);
 		cmd = (void*)cmd + SWAP(cmd->cmdsize, file->swap);
 		i++;
 	}
 	if (!file->sym)
 		return ;
-	cmd = (void*)file->file + sizeof(struct mach_header);
-	i = 0;
-	while (i < SWAP(file->headers.header->ncmds, file->swap))
-	{
-		if (SWAP(cmd->cmd, file->swap) == LC_SEGMENT)
-			add_seg(cmd, file);
-		cmd = (void*)cmd + SWAP(cmd->cmdsize, file->swap);
-		i++;
-	}
 	print_output(file);
 }

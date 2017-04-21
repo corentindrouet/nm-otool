@@ -6,7 +6,7 @@
 #    By: mdugot <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/12/03 12:08:51 by mdugot            #+#    #+#              #
-#    Updated: 2017/04/14 14:07:45 by cdrouet          ###   ########.fr        #
+#    Updated: 2017/04/21 09:40:04 by cdrouet          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,6 @@ SRC_NAME= ft_otool.c \
 		  handle_fat.c \
 		  sectment_lst.c \
 		  segment_lst.c \
-		  symtable_lst.c \
 		  utils.c
 INC_NAME= ft_otool.h
 SRC_PATH= ./sources/

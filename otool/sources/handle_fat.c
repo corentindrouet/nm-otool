@@ -6,13 +6,13 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/13 08:36:46 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/20 13:54:56 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/20 16:11:25 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_otool.h"
 
-char		*arch_str(cpu_type_t cputype)
+static char	*arch_str(cpu_type_t cputype)
 {
 	if (cputype == CPU_TYPE_MC680x0)
 		return ("mc680x0");

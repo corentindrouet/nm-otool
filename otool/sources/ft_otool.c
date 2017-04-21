@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/14 13:55:35 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/20 14:29:01 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/21 09:41:14 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void		init_file_struct(t_file_structs *file, char *filename)
 	file->headers.header_64 = NULL;
 	file->segments = NULL;
 	file->sections = NULL;
-	file->sym = NULL;
 	file->file = NULL;
 	file->file_info = malloc(sizeof(struct stat));
 	file->swap = 0;
