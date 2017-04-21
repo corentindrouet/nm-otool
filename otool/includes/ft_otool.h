@@ -6,7 +6,7 @@
 /*   By: cdrouet <cdrouet@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 08:52:25 by cdrouet           #+#    #+#             */
-/*   Updated: 2017/04/21 09:41:00 by cdrouet          ###   ########.fr       */
+/*   Updated: 2017/04/21 10:30:49 by cdrouet          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ union			u_header
 {
 	struct mach_header		*header;
 	struct mach_header_64	*header_64;
-};;
+};
 
 typedef struct	s_arch_header
 {
